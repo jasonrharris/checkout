@@ -32,28 +32,31 @@ public class Main {
 
         boolean exit = false;
 
-        while (!exit) {
-            // create a scanner so we can read the command-line input
-            Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
+        scanner.useDelimiter(System.lineSeparator());
 
-            //  prompt for the user's name
-            System.out.print("Enter a product code to add to the basket: ");
+        try {
+            while (!exit) {
+                System.out.println("Enter a product code to add to the basket: ");
+                String prodCode = scanner.next();
 
-            // get their input as a String
-            String prodCode = scanner.next();
-
-            if (prodCode.equalsIgnoreCase("Exit")) {
-                exit = true;
-            } else {
-                Long code = Long.valueOf(prodCode);
-                Product product = productMap.get(code);
-                if (product == null) {
-                    System.out.println(code + " is not known product code");
+                if (prodCode.equalsIgnoreCase("Exit")) {
+                    exit = true;
                 } else {
-                    basket.addItem(product);
+                    Long code = Long.valueOf(prodCode);
+                    Product product = productMap.get(code);
+                    if (product == null) {
+                        System.out.println(code + " is not a known product code");
+                    } else {
+                        basket.addItem(product);
+                    }
                 }
             }
+        } catch(IllegalStateException | NoSuchElementException e) {
+            // System.in has been closed
+            System.out.println("System.in was closed due to "+ e);
         }
+
         return basket;
     }
 

@@ -1,5 +1,14 @@
 plugins {
-    id 'java'
+    id "application"
+    id "java"
+}
+
+ext {
+    javaMainClass = "com.jasonrharris.shop.Main"
+}
+
+application {
+    mainClassName = javaMainClass
 }
 
 group 'jasonrharris'
