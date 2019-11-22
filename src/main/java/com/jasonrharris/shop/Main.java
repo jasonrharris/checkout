@@ -2,6 +2,7 @@ package com.jasonrharris.shop;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class Main {
 
@@ -32,29 +33,33 @@ public class Main {
 
         boolean exit = false;
 
-        Scanner scanner = new Scanner(System.in);
-        scanner.useDelimiter(System.lineSeparator());
+        try (Scanner scanner = new Scanner(System.in)) {
 
-        try {
-            while (!exit) {
-                System.out.println("Enter a product code to add to the basket: ");
-                String prodCode = scanner.next();
+            try {
+                while (!exit) {
+                    System.out.println("Enter a product code to add to the basket: ");
 
-                if (prodCode.equalsIgnoreCase("Exit")) {
-                    exit = true;
-                } else {
-                    Long code = Long.valueOf(prodCode);
-                    Product product = productMap.get(code);
-                    if (product == null) {
-                        System.out.println(code + " is not a known product code");
+                    String prodCode = scanner.next();
+
+                    if (prodCode.equalsIgnoreCase("Exit")) {
+                        exit = true;
                     } else {
-                        basket.addItem(product);
+                        Long code = Long.valueOf(prodCode);
+                        Product product = productMap.get(code);
+                        System.out.println("Product is " + product);
+                        if (product == null) {
+                            System.out.println(code + " is not a known product code");
+                        } else {
+                            basket.addItem(product);
+                        }
                     }
                 }
+
+            } catch (IllegalStateException | NoSuchElementException e) {
+                // System.in has been closed
+                System.out.println("System.in was closed");
+                e.printStackTrace(System.err);
             }
-        } catch(IllegalStateException | NoSuchElementException e) {
-            // System.in has been closed
-            System.out.println("System.in was closed due to "+ e);
         }
 
         return basket;
